@@ -1,0 +1,19 @@
+<h2>Editar datos</h2>
+
+<form method="POST">
+
+  <label>Nombres</label>
+  <input type="text" name="nombres" value="{{ alumno.nombres }}">
+
+  <label>Correo</label>
+  <input type="email" name="email" value="{{ alumno.email }}">
+
+  <label>Semestre</label>
+  <input type="text" name="semestre" value="{{ alumno.semestre }}">
+
+  <label>Carrera</label>
+  <input type="text" name="carrera" value="{{ alumno.carrera }}">
+
+  <button type="submit">Guardar</button>
+
+</form>
