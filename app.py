@@ -8,32 +8,27 @@ app.secret_key = "secreto123"
 CORS(app)
 
 # =======================
-# 🔗 CONEXIÓN MONGO (NO TIRA LA APP)
+# 🔗 MONGO (NO ROMPE APP)
 # =======================
 MONGO_URI = "mongodb+srv://ricardopauljose92_db_user:sSondflxoc6PIFw6@cluster0.tmppfp7.mongodb.net/?retryWrites=true&w=majority"
 
-alumnos = None  # 👈 valor por defecto
+alumnos = None
 
 try:
     client = MongoClient(
         MONGO_URI,
-        tls=True,
-        tlsAllowInvalidCertificates=True,
-        serverSelectionTimeoutMS=5000,
-        connectTimeoutMS=10000
+        serverSelectionTimeoutMS=5000
     )
-    client.server_info()
-    print("✅ Mongo conectado")
-
     db = client["cbtis272"]
     alumnos = db["alumnos"]
+    print("✅ Mongo conectado")
 
 except Exception as e:
-    print("❌ Error Mongo:", e)
-    alumnos = None  # 👈 evita que truene todo
+    print("❌ Mongo falló:", e)
+    alumnos = None  # 👈 NO rompe la app
 
 # =======================
-# 🧪 TESTS
+# TEST
 # =======================
 @app.route("/test")
 def test():
@@ -43,12 +38,7 @@ def test():
 def mongo_test():
     if alumnos is None:
         return "Mongo NO conectado ❌"
-
-    try:
-        alumnos.find_one()
-        return "Mongo OK ✅"
-    except Exception as e:
-        return f"Error Mongo: {e}"
+    return "Mongo OK ✅"
 
 # =======================
 # LOGIN
@@ -62,16 +52,13 @@ def login():
     if request.method == "POST":
         curp = request.form.get("curp")
 
-        if not curp:
-            return "Falta CURP"
-
         alumno = alumnos.find_one({"curp": curp})
 
         if alumno:
             session["curp"] = curp
             return redirect("/perfil")
-        else:
-            return "Alumno no encontrado"
+
+        return "Alumno no encontrado"
 
     return render_template("login.html")
 
@@ -89,14 +76,12 @@ def registrar():
 
     data = request.form.to_dict()
 
-    if "curp" not in data:
-        return "Falta CURP"
-
     if alumnos.find_one({"curp": data["curp"]}):
         return "Ya existe este alumno"
 
     alumnos.insert_one(data)
     session["curp"] = data["curp"]
+
     return redirect("/perfil")
 
 # =======================
@@ -146,7 +131,7 @@ def logout():
     return redirect("/login")
 
 # =======================
-# RUN (RENDER)
+# RUN
 # =======================
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
