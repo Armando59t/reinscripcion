@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reinscripción CBTis 272</title>
+
+<style>
+:root {
+  --vino: #7a1f1f;
+  --dorado: #c9a44c;
+  --fondo: rgba(255,255,255,0.95);
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+              url('https://images.unsplash.com/photo-1580587771525-78b9dba3b914');
+  background-size: cover;
+  background-position: center;
+}
+
+.contenedor {
+  max-width: 850px;
+  margin: 40px auto;
+  background: var(--fondo);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  border-top: 6px solid var(--dorado);
+}
+
+h2 {
+  text-align: center;
+  color: var(--vino);
+}
+
+h3 {
+  color: var(--vino);
+  border-left: 5px solid var(--dorado);
+  padding-left: 10px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.fila {
+  display: flex;
+  gap: 15px;
+}
+
+.fila > div {
+  flex: 1;
+}
+
+input, select {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+button {
+  background: var(--vino);
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #a52a2a;
+}
+</style>
+</head>
+
+<body>
+
+<div class="contenedor">
+<h2>Reinscripción de Alumnos</h2>
+
+<form action="/registrar" method="POST">
+
+<h3>Datos del Alumno</h3>
+
+<div class="fila">
+  <div>
+    <label>Apellido paterno</label>
+    <input type="text" name="apellido_paterno" required>
+  </div>
+  <div>
+    <label>Apellido materno</label>
+    <input type="text" name="apellido_materno" required>
+  </div>
+</div>
+
+<label>Nombres</label>
+<input type="text" name="nombres" required>
+
+<label>CURP</label>
+<input type="text" name="curp" required>
+
+<label>Correo institucional</label>
+<input type="email" name="correo_institucional" placeholder="ejemplo@cbtis272.edu.mx" required>
+
+<h3>Datos Escolares</h3>
+
+<div class="fila">
+  <div>
+    <label>Semestre</label>
+    <select name="semestre" required>
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      <option>5</option>
+      <option>6</option>
+    </select>
+  </div>
+
+  <div>
+    <label>Turno</label>
+    <select name="turno" required>
+      <option>Matutino</option>
+      <option>Vespertino</option>
+    </select>
+  </div>
+</div>
+
+<label>Carrera</label>
+<input type="text" name="carrera" required>
+
+<h3>Contacto</h3>
+
+<label>Teléfono</label>
+<input type="tel" name="telefono" required>
+
+<label>Correo personal</label>
+<input type="email" name="email" required>
+
+<h3>Tutor</h3>
+
+<label>Nombre del tutor</label>
+<input type="text" name="tutor" required>
+
+<label>Teléfono del tutor</label>
+<input type="tel" name="telefono_tutor" required>
+
+<br>
+
+<button type="submit">Enviar Reinscripción</button>
+
+</form>
+</div>
+
+</body>
+</html>
