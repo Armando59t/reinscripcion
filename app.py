@@ -8,7 +8,7 @@ app.secret_key = "secreto123"
 CORS(app)
 
 # 🔗 MongoDB
-MONGO_URI = os.getenv("MONGO_URI")
+MONGO_URI = "mongodb+srv://ricardopauljose92_db_user:sSondflxoc6PIFw6@cluster0.tmppfp7.mongodb.net/?retryWrites=true&w=majority"
 client = MongoClient(MONGO_URI)
 db = client["cbtis272"]
 alumnos = db["alumnos"]
