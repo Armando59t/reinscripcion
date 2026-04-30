@@ -7,18 +7,29 @@ app = Flask(__name__)
 app.secret_key = "secreto123"
 CORS(app)
 
-# 🔗 MongoDB
+# Mongo
 MONGO_URI = "mongodb+srv://ricardopauljose92_db_user:sSondflxoc6PIFw6@cluster0.tmppfp7.mongodb.net/?retryWrites=true&w=majority"
-client = MongoClient(MONGO_URI)
+client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+
+try:
+    client.server_info()
+    print("Mongo conectado")
+except Exception as e:
+    print("Error Mongo:", e)
+
 db = client["cbtis272"]
 alumnos = db["alumnos"]
 
-# ================= LOGIN =================
+# LOGIN
 @app.route("/", methods=["GET", "POST"])
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        curp = request.form["curp"]
+        curp = request.form.get("curp")
+
+        if not curp:
+            return "Falta CURP"
+
         alumno = alumnos.find_one({"curp": curp})
 
         if alumno:
@@ -30,7 +41,7 @@ def login():
     return render_template("login.html")
 
 
-# ================= REGISTRO =================
+# REGISTRO
 @app.route("/registro")
 def registro():
     return render_template("registro.html")
@@ -40,6 +51,9 @@ def registro():
 def registrar():
     data = request.form.to_dict()
 
+    if "curp" not in data:
+        return "Falta CURP"
+
     if alumnos.find_one({"curp": data["curp"]}):
         return "Ya existe este alumno"
 
@@ -48,7 +62,7 @@ def registrar():
     return redirect("/perfil")
 
 
-# ================= PERFIL =================
+# PERFIL
 @app.route("/perfil")
 def perfil():
     if "curp" not in session:
@@ -58,7 +72,7 @@ def perfil():
     return render_template("perfil.html", alumno=alumno)
 
 
-# ================= EDITAR =================
+# EDITAR
 @app.route("/editar", methods=["GET", "POST"])
 def editar():
     if "curp" not in session:
@@ -78,7 +92,7 @@ def editar():
     return render_template("editar.html", alumno=alumno)
 
 
-# ================= LOGOUT =================
+# LOGOUT
 @app.route("/logout")
 def logout():
     session.clear()
@@ -86,4 +100,5 @@ def logout():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
