@@ -7,8 +7,11 @@ app = Flask(__name__)
 app.secret_key = "secreto123"
 CORS(app)
 
-# Mongo
+# =======================
+# 🔗 CONEXIÓN MONGO (FIX REAL)
+# =======================
 MONGO_URI = "mongodb+srv://ricardopauljose92_db_user:sSondflxoc6PIFw6@cluster0.tmppfp7.mongodb.net/?retryWrites=true&w=majority"
+
 client = MongoClient(
     MONGO_URI,
     tls=True,
@@ -19,15 +22,32 @@ client = MongoClient(
 
 try:
     client.server_info()
-    print("Mongo conectado")
+    print("✅ Mongo conectado")
 except Exception as e:
-    print("Error Mongo:", e)
-    raise e  # 🔥 ESTO ES CLAVE
+    print("❌ Error Mongo:", e)
+    raise e
 
 db = client["cbtis272"]
 alumnos = db["alumnos"]
 
+# =======================
+# 🧪 TESTS (MUY IMPORTANTES)
+# =======================
+@app.route("/test")
+def test():
+    return "Servidor OK"
+
+@app.route("/mongo-test")
+def mongo_test():
+    try:
+        alumnos.find_one()
+        return "Mongo OK"
+    except Exception as e:
+        return f"Error Mongo: {e}"
+
+# =======================
 # LOGIN
+# =======================
 @app.route("/", methods=["GET", "POST"])
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -48,7 +68,9 @@ def login():
     return render_template("login.html")
 
 
+# =======================
 # REGISTRO
+# =======================
 @app.route("/registro")
 def registro():
     return render_template("registro.html")
@@ -69,7 +91,9 @@ def registrar():
     return redirect("/perfil")
 
 
+# =======================
 # PERFIL
+# =======================
 @app.route("/perfil")
 def perfil():
     if "curp" not in session:
@@ -79,7 +103,9 @@ def perfil():
     return render_template("perfil.html", alumno=alumno)
 
 
+# =======================
 # EDITAR
+# =======================
 @app.route("/editar", methods=["GET", "POST"])
 def editar():
     if "curp" not in session:
@@ -99,13 +125,18 @@ def editar():
     return render_template("editar.html", alumno=alumno)
 
 
+# =======================
 # LOGOUT
+# =======================
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect("/login")
 
 
+# =======================
+# RUN (RENDER)
+# =======================
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
