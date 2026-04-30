@@ -16,6 +16,7 @@ try:
     print("Mongo conectado")
 except Exception as e:
     print("Error Mongo:", e)
+    raise e  # 🔥 ESTO ES CLAVE
 
 db = client["cbtis272"]
 alumnos = db["alumnos"]
